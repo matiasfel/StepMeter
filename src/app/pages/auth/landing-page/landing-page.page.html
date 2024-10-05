@@ -1,0 +1,23 @@
+<ion-content [fullscreen]="true">
+  <div class="container">
+
+    <section *ngIf="showInfoSection" @fadeInOut (@fadeInOut.done)="onAnimationDone($event)">
+      <img class="image"  src="assets/images/bg-2.jpg" alt="Image">
+    </section>
+
+    <section class="info" *ngIf="showInfoSection" @fadeInOut (@fadeInOut.done)="onAnimationDone($event)">
+      <h2>STEPMETER</h2>
+      <h1>Bienvenid<span>&#64;</span> a tu aplicacion preferida para hacer deporte</h1>
+      <button *ngIf="!isAnimating" (click)="toggleSections()">COMIENZA <ion-icon name="arrow-forward-outline"></ion-icon></button>
+    </section>
+
+    <section class="login" *ngIf="showLoginSection" @fadeUpDown (@fadeUpDown.done)="onLoginAnimationDone($event)">
+      <img src="assets/images/icons/arrow-back.svg" alt="Back" (click)="goBack()"> 
+    
+      <div class="form">
+        <h1>Inicia sesión en StepMeter</h1>
+      </div>
+    </section>
+
+  </div>
+</ion-content>
