@@ -4,12 +4,12 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'landing-page',
+    redirectTo: 'landingPage',
     pathMatch: 'full'
   },
   {
-    path: 'landing-page',
-    loadChildren: () => import('./pages/auth/landing-page/landing-page.module').then( m => m.LandingPagePageModule)
+    path: 'landingPage',
+    loadChildren: () => import('./pages/auth/landing-page.module').then( m => m.LandingPagePageModule)
   },
 ];
 
