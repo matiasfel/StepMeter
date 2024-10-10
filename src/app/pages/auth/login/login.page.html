@@ -1,0 +1,59 @@
+<ion-content [fullscreen]="true">
+  <div class="container">
+
+    <!-- Seccion de iniciar sesion -->
+
+    <section class="login">
+    
+      <div class="form-space">
+        <h1>StepMeter</h1>
+        <form action="" method="post">
+          
+          <span>Correo electroníco</span>
+          <ion-input
+          class="custom"
+          type="email"
+          name="email"
+          autocomplete="email"
+          autocorrect="off"
+          inputmode="email"
+          color="light"
+          required="true"
+          mode="ios"
+          ></ion-input>
+
+          <span>Contraseña</span>
+          <ion-input
+          class="custom"
+          type="password"
+          name="password"
+          autocomplete="current-password"
+          autocorrect="off"
+          inputmode="text"
+          color="light"
+          required
+          mode="ios"
+          > 
+            <ion-input-password-toggle slot="end" color="light" mode="ios"></ion-input-password-toggle>
+          </ion-input>
+
+          <a class="forgot-pass" routerLink="/recovery">¿Olvidaste tu contraseña?</a>
+          <button type="submit">Acceder</button>
+        </form>
+
+        <div class="separator">
+          <hr>
+          <span>O</span>
+          <hr>
+        </div>
+
+        <div class="register">
+          <p>¿No tienes cuenta? <br> <a routerLink="/registration">Registrate.</a></p>
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+</ion-content>

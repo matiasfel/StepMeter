@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="/" text="Volver" style="color: white;"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="container">
+
+    <!-- Seccion de iniciar sesion -->
+
+    <section class="register">
+    
+      <div class="form-space">
+        <h1>Registrate</h1>
+        <h2>Ya tienes una cuenta? <a routerLink="/login">Inicia sesion.</a></h2>
+        <form action="" method="post">
+          
+          <span id="span1">Correo electroníco</span>
+          <span id="span2">Completa el formulario para crear una cuenta nueva. Asegúrate de ingresar un correo electrónico válido y seguir todos los pasos requeridos para finalizar el proceso de registro.</span>
+          <ion-input
+          class="custom"
+          type="email"
+          name="email"
+          autocomplete="email"
+          autocorrect="off"
+          inputmode="email"
+          color="light"
+          required="true"
+          mode="ios"
+          placeholder="hello@stepmeter.cl"
+          ></ion-input>
+
+          <button type="submit">Registrate</button>
+        </form>
+
+      </div>
+
+    </section>
+
+  </div>
+</ion-content>
