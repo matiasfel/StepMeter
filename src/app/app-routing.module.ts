@@ -22,6 +22,10 @@ const routes: Routes = [
   {
     path: 'recovery',
     loadChildren: () => import('./pages/auth/recovery/recovery.module').then( m => m.RecoveryPageModule)
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () => import('./pages/home/dashboard/dashboard.module').then( m => m.DashboardPageModule)
   }
 ];
 

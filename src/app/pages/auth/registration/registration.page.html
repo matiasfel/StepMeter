@@ -1,11 +1,3 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button default-href="/" text="Volver" style="color: white;"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
   <div class="container">
 
@@ -15,11 +7,10 @@
     
       <div class="form-space">
         <h1>Registrate</h1>
-        <h2>Ya tienes una cuenta? <a routerLink="/login">Inicia sesion.</a></h2>
-        <form action="" method="post">
+        <h2>¡Bienvenido! Por favor, ingresa tus datos para registrarte.</h2>
+        <form (submit)="formAccess()">
           
-          <span id="span1">Correo electroníco</span>
-          <span id="span2">Completa el formulario para crear una cuenta nueva. Asegúrate de ingresar un correo electrónico válido y seguir todos los pasos requeridos para finalizar el proceso de registro.</span>
+          <span>Correo electroníco</span>
           <ion-input
           class="custom"
           type="email"
@@ -30,11 +21,44 @@
           color="light"
           required="true"
           mode="ios"
-          placeholder="hello@stepmeter.cl"
+
+          [(ngModel)]="email"
           ></ion-input>
 
-          <button type="submit">Registrate</button>
+          <span>Contraseña</span>
+          <ion-input
+          class="custom"
+          type="password"
+          name="password"
+          autocomplete="current-password"
+          autocorrect="off"
+          inputmode="text"
+          color="light"
+          required
+          mode="ios"
+
+          [(ngModel)]="password"
+          > 
+            <ion-input-password-toggle slot="end" color="light" mode="ios"></ion-input-password-toggle>
+          </ion-input>
+
+          <a class="forgot-pass" routerLink="/recovery">¿Olvidaste tu contraseña?</a>
+          <ion-button 
+          id="open-loading"
+          type="submit"
+          expand="block"
+          color="light"
+          mode="ios"
+          >
+          Iniciar sesión
+          </ion-button>
         </form>
+
+        <div class="separator">
+          <hr>
+          <span>O</span>
+          <hr>
+        </div>
 
       </div>
 

@@ -7,7 +7,7 @@
     
       <div class="form-space">
         <h1>StepMeter</h1>
-        <form action="" method="post">
+        <form (submit)="formAccess()">
           
           <span>Correo electroníco</span>
           <ion-input
@@ -17,9 +17,10 @@
           autocomplete="email"
           autocorrect="off"
           inputmode="email"
-          color="light"
           required="true"
           mode="ios"
+
+          [(ngModel)]="email"
           ></ion-input>
 
           <span>Contraseña</span>
@@ -30,15 +31,24 @@
           autocomplete="current-password"
           autocorrect="off"
           inputmode="text"
-          color="light"
           required
           mode="ios"
+
+          [(ngModel)]="password"
           > 
             <ion-input-password-toggle slot="end" color="light" mode="ios"></ion-input-password-toggle>
           </ion-input>
 
           <a class="forgot-pass" routerLink="/recovery">¿Olvidaste tu contraseña?</a>
-          <button type="submit">Acceder</button>
+          <ion-button 
+          id="open-loading"
+          type="submit"
+          expand="block"
+          color="light"
+          mode="ios"
+          >
+          Iniciar sesión
+          </ion-button>
         </form>
 
         <div class="separator">

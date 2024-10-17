@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "285075813445",
+    "project_id": "stepmeter-a3158",
+    "storage_bucket": "stepmeter-a3158.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285075813445:android:803660412983800e485f2c",
+        "android_client_info": {
+          "package_name": "StepMeter_01.duocvina"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDfWgIxnc3N9t_QHgF_3ir-BD35f-g0_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -83,15 +83,8 @@ ion-content {
     --placeholder-opacity: 0.5;
   }
   
-  .form-space form button {
+  ion-button {
     width: 100%;
-    padding: 1.1rem;
-    margin-bottom: 1rem;
-    background: #ffffff;
-    color: black;
-    border-radius: 7px;
-    font-weight: 700;
-    font-size: 0.9rem;
   }
   
   .forgot-pass {
@@ -119,6 +112,7 @@ ion-content {
   }
   
   .separator span {
+    margin-top: 5px;
     padding: 0 10px;
     color: #ffffff;
   }
