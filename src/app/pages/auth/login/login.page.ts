@@ -73,6 +73,7 @@ export class LoginPage implements OnInit {
       this.presentErrorAlert('Por favor ingresa un correo electrónico válido.');
       return;
     }
+    
     const loading = await this.presentLoading();
 
     setTimeout(async () => {
@@ -81,6 +82,7 @@ export class LoginPage implements OnInit {
         this.router.navigate(['/dashboard']);
       }).catch((err) => {
         this.presentErrorAlert('Correo o contraseña incorrectos.');
+        console.log("Error")
       });
       await loading.dismiss();
     }, 500);

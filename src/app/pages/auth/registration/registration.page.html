@@ -10,6 +10,20 @@
         <h2>¡Bienvenido! Por favor, ingresa tus datos para registrarte.</h2>
         <form (submit)="formAccess()">
           
+          <span>Nombre de usuario</span>
+          <ion-input
+          class="custom"
+          type="text"
+          name="name"
+          autocorrect="off"
+          inputmode="text"
+          color="light"
+          required
+          mode="ios"
+
+          [(ngModel)]="name"
+          ></ion-input>
+
           <span>Correo electroníco</span>
           <ion-input
           class="custom"
@@ -19,7 +33,7 @@
           autocorrect="off"
           inputmode="email"
           color="light"
-          required="true"
+          required
           mode="ios"
 
           [(ngModel)]="email"
@@ -39,10 +53,10 @@
 
           [(ngModel)]="password"
           > 
-            <ion-input-password-toggle slot="end" color="light" mode="ios"></ion-input-password-toggle>
           </ion-input>
 
-          <a class="forgot-pass" routerLink="/recovery">¿Olvidaste tu contraseña?</a>
+          <span><!-- Error messages --></span>
+
           <ion-button 
           id="open-loading"
           type="submit"
@@ -50,7 +64,7 @@
           color="light"
           mode="ios"
           >
-          Iniciar sesión
+          Registrarse
           </ion-button>
         </form>
 

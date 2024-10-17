@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
+import { FirebaseLoginService } from 'src/app/services/firebase-login.service';
 
 @Component({
   selector: 'app-registration',
@@ -8,6 +9,8 @@ import { AlertController, LoadingController, ToastController } from '@ionic/angu
   styleUrls: ['./registration.page.scss'],
 })
 export class RegistrationPage implements OnInit {
+
+  name:string = "";
   email:string = "";
   password:string = "";
 
@@ -15,6 +18,7 @@ export class RegistrationPage implements OnInit {
     private toastController: ToastController,
     private loadingController: LoadingController,
     private alertController: AlertController,
+    private access:FirebaseLoginService,
     private router: Router
   ) { }
 
@@ -56,31 +60,8 @@ export class RegistrationPage implements OnInit {
   ngOnInit() {
   }
 
-  async formAccess() {
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!this.email || !this.password) {
-      this.presentErrorAlert('Por favor completa todos los campos.');
-      return;
-    }
-    
-    if (!emailPattern.test(this.email)) {
-      this.presentErrorAlert('Por favor ingresa un correo electrónico válido.');
-      return;
-    }
-    const loading = await this.presentLoading();
-
-    setTimeout(async () => {
-      if (this.email === 'admin@as.cl' && this.password === 'admin') {
-        console.log("SUCCESS: Login has been completed");
-        this.presentSuccessToast();
-        this.router.navigate(['/dashboard']);
-      } else {
-        console.log("ERROR: Email or password is incorrect");
-        this.presentErrorAlert('Correo electrónico o contraseña incorrectos.');
-      }
-      await loading.dismiss();
-    }, 500);
+  async formAccess(){
+    await this.access.createUser(this.email, this.password, this.name)
   }
+
 }
