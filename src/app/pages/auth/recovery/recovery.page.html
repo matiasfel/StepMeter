@@ -1,13 +1,52 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>recovery</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">recovery</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="container">
+
+    <!-- Seccion de iniciar sesion -->
+
+    <section class="recovery">
+    
+      <div class="form-space">
+        <h1>Recupera tu cuenta</h1>
+        <form (submit)="formAccess()">
+
+          <span class="inputTitle">Correo electroníco</span>
+          <ion-input
+          class="custom"
+          type="email"
+          name="email"
+          autocomplete="email"
+          autocorrect="off"
+          inputmode="email"
+          color="light"
+          required
+          mode="ios"
+
+          [(ngModel)]="email"
+          ></ion-input>
+
+          <div class="validation">
+            <p>
+              Le haremos llegar un correo electronico con la informacion 
+              para recuperar su contraseña, en caso de no ser enviado intente
+            </p>
+          </div>
+
+          <ion-button 
+          id="open-loading"
+          type="submit"
+          expand="block"
+          color="light"
+          mode="ios"
+          >
+          Enviar correo
+          </ion-button>
+        </form>
+
+        <span class="haveAccount">Ya tienes una cuenta? <a routerLink="/login" routerDirection="back">inicia sesion.</a></span>
+
+      </div>
+
+    </section>
+
+  </div>
 </ion-content>

@@ -35,4 +35,8 @@ export class FirebaseLoginService {
     });
     return userCredential;
   }
+
+  async recovery(email: string){
+    return this.fireAuth.sendPasswordResetEmail(email);
+  }
 }
