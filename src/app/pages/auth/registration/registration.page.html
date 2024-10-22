@@ -7,24 +7,23 @@
     
       <div class="form-space">
         <h1>Registrate</h1>
-        <h2>¡Bienvenido! Por favor, ingresa tus datos para registrarte.</h2>
         <form (submit)="formAccess()">
           
-          <span>Nombre de usuario</span>
+          <span class="inputTitle">Nombre de usuario</span>
           <ion-input
           class="custom"
           type="text"
-          name="name"
+          name="username"
           autocorrect="off"
           inputmode="text"
           color="light"
           required
           mode="ios"
 
-          [(ngModel)]="name"
+          [(ngModel)]="username"
           ></ion-input>
 
-          <span>Correo electroníco</span>
+          <span class="inputTitle">Correo electroníco</span>
           <ion-input
           class="custom"
           type="email"
@@ -39,12 +38,11 @@
           [(ngModel)]="email"
           ></ion-input>
 
-          <span>Contraseña</span>
+          <span class="inputTitle">Contraseña</span>
           <ion-input
           class="custom"
           type="password"
           name="password"
-          autocomplete="current-password"
           autocorrect="off"
           inputmode="text"
           color="light"
@@ -55,7 +53,13 @@
           > 
           </ion-input>
 
-          <span><!-- Error messages --></span>
+          <div class="validation">
+            <strong>Considera esto para tu contraseña:</strong>
+            <p>Debe tener al menos 8 caracteres.</p>
+            <p>Debe contener al menos una letra mayúscula.</p>
+            <p>Debe tener al menos un carácter especial.</p>
+            <p>Debe contener al menos un número.</p>
+          </div>
 
           <ion-button 
           id="open-loading"
@@ -64,15 +68,11 @@
           color="light"
           mode="ios"
           >
-          Registrarse
+          Crear cuenta
           </ion-button>
         </form>
 
-        <div class="separator">
-          <hr>
-          <span>O</span>
-          <hr>
-        </div>
+        <span class="haveAccount">Ya tienes una cuenta? <a routerLink="/login" routerDirection="back">inicia sesion.</a></span>
 
       </div>
 

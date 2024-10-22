@@ -10,22 +10,22 @@ import { FirebaseLoginService } from 'src/app/services/firebase-login.service';
 })
 export class RegistrationPage implements OnInit {
 
-  name:string = "";
-  email:string = "";
-  password:string = "";
+  username: string = "";
+  email: string = "";
+  password: string = "";
 
   constructor(
     private toastController: ToastController,
     private loadingController: LoadingController,
     private alertController: AlertController,
-    private access:FirebaseLoginService,
+    private access: FirebaseLoginService,
     private router: Router
   ) { }
 
   async presentSuccessToast() {
     const toast = await this.toastController.create({
-      message: 'Inicio de sesión exitoso.',
-      position: 'bottom',  // Cambia 'positionAnchor' por 'position'
+      message: 'Registro exitoso.',
+      position: 'bottom',
       duration: 5000,
       color: 'light',
       buttons: [
@@ -40,7 +40,7 @@ export class RegistrationPage implements OnInit {
 
   async presentErrorAlert(message: string) {
     const alert = await this.alertController.create({
-      header: 'Inicio de sesión',
+      header: 'Registro de usuario',
       message: message,
       buttons: ['Aceptar']
     });
@@ -49,7 +49,7 @@ export class RegistrationPage implements OnInit {
 
   async presentLoading() {
     const loading = await this.loadingController.create({
-      message: 'Iniciando sesión...',
+      message: 'Registrando...',
       duration: 1000,
       spinner: 'circles'
     });
@@ -60,8 +60,27 @@ export class RegistrationPage implements OnInit {
   ngOnInit() {
   }
 
-  async formAccess(){
-    await this.access.createUser(this.email, this.password, this.name)
-  }
+  async formAccess() {
 
+    if (!this.username || !this.email || !this.password) {
+      this.presentErrorAlert('Debes completar todos los campos para crear una cuenta.');
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(this.email)) {
+      this.presentErrorAlert('Debes ingresar un correo electrónico válido.');
+      return;
+    }
+
+    const passwordPattern = /^(?=.*\d)(?=.*[A-Z])(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
+
+    if (!passwordPattern.test(this.password)) {
+      this.presentErrorAlert('La contraseña debe tener al menos 8 caracteres, una mayuscula, un número y un caracter especial.');
+      return;
+    }
+
+    await this.access.createUser(this.email, this.password, this.username);
+  }
 }
