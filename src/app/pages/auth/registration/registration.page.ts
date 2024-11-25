@@ -81,10 +81,16 @@ export class RegistrationPage implements OnInit {
       return;
     }
 
-    this.access.createUser(this.email, this.password, this.username).then(() => {
-      this.presentSuccessToast();
-    }).catch((error: any) => {
-      this.presentErrorAlert('El correo electrónico ya está en uso.');
-    });
+    const loading = await this.presentLoading();
+
+    setTimeout(async () => {
+      this.access.createUser(this.email, this.password, this.username).then(() => {
+        this.presentSuccessToast();
+        this.router.navigate(['/login']);
+      }).catch(() => {
+        this.presentErrorAlert('El correo electrónico ya está en uso.');
+      });
+      await loading.dismiss();
+    }, 1000);
   }
 }

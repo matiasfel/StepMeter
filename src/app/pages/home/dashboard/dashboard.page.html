@@ -1,13 +1,41 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>dashboard</ion-title>
+    <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">dashboard</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-card *ngIf="user">
+    <ion-card-header>
+      <ion-card-title>User Info</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Name: {{ user.name }}</p>
+      <p>Email: {{ user.email }}</p>
+      <p>Password: {{ user.password }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>All Local Storage Data</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngFor="let item of allData">
+        <p><strong>{{ item.key }}:</strong> {{ item.value | json }}</p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Remove session</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngFor="let item of allData">
+        <ion-button (click)="removeSession(item.key)">Remove {{ item.key }}</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { FirebaseLoginService } from 'src/app/services/firebase-login.service';
+import { LocalStorageIonicService } from 'src/app/services/local-storage-ionic.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
@@ -19,7 +22,9 @@ export class LoginPage implements OnInit {
     private loadingController: LoadingController,
     private alertController: AlertController,
     private loginFirebase: FirebaseLoginService,
-    private router: Router
+    private localStorageIonicService: LocalStorageIonicService,
+    private firestore: AngularFirestore,
+    private router: Router,
   ) { }
 
   async presentSuccessToast() {
@@ -61,28 +66,48 @@ export class LoginPage implements OnInit {
   }
 
   async formAccess() {
-
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!this.email || !this.password) {
       this.presentErrorAlert('Por favor completa todos los campos.');
       return;
     }
-    
+
     if (!emailPattern.test(this.email)) {
       this.presentErrorAlert('Por favor ingresa un correo electrónico válido.');
       return;
     }
-    
+
     const loading = await this.presentLoading();
 
     setTimeout(async () => {
-      this.loginFirebase.login(this.email, this.password).then((res) => {
+      this.loginFirebase.login(this.email, this.password).then(async (res) => {
+        if (!res.user) {
+          this.presentErrorAlert('Error al obtener el usuario.');
+          return;
+        }
+
+        // Obtener el documento del usuario
+        const userDoc = await firstValueFrom(this.firestore.collection('users').doc(res.user.uid).get());
+        if (!userDoc.exists) {
+          this.presentErrorAlert('Usuario no encontrado.');
+          return;
+        }
+
+        const userData = userDoc.data() as { name: string };
+
+        // Guardar datos en el almacenamiento local
+        this.localStorageIonicService.set('user', {
+          name: userData.name,
+          email: this.email,
+          password: this.password
+        });
+
         this.presentSuccessToast();
         this.router.navigate(['/dashboard']);
       }).catch((err) => {
         this.presentErrorAlert('Correo o contraseña incorrectos.');
-        console.log("Error")
+        console.log("Error", err);
       });
       await loading.dismiss();
     }, 500);
