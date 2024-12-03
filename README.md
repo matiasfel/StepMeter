@@ -10,4 +10,3 @@ Repositorio de nuestra primera aplicación móvil multiplataforma desarrollada c
 ## Autores
 - [@matiasfel](https://github.com/matiasfel)
 - [@Jun191a](https://github.com/Jun191a)
-- [@NicolasTapia231](https://github.com/NicolasTapia231)
