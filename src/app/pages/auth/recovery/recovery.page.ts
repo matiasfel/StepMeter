@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
-import { FirebaseLoginService } from 'src/app/services/firebase-login.service';
+import { FirebaseLoginService } from 'src/app/services/firebaseService/firebase-login.service';
 
 @Component({
   selector: 'app-recovery',

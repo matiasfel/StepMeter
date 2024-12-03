@@ -35,15 +35,4 @@ export class LocalStorageIonicService {
   public async getAllKeys(): Promise<string[]> {
     return (await this._storage?.keys()) ?? [];
   }
-
-  // Get all data
-  public async getAllData(): Promise<any[]> {
-    const keys = await this.getAllKeys();
-    const data = [];
-    for (const key of keys) {
-      const value = await this.get(key);
-      data.push({ key, value });
-    }
-    return data;
-  }
 }

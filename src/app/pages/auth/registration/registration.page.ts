@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
-import { FirebaseLoginService } from 'src/app/services/firebase-login.service';
+import { FirebaseLoginService } from 'src/app/services/firebaseService/firebase-login.service';
 
 @Component({
   selector: 'app-registration',
@@ -58,6 +58,18 @@ export class RegistrationPage implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  async passwordAlert() {
+    
+    const alert = await this.alertController.create({
+      header: 'Contraseña',
+      subHeader: '(Ej: Abcd1234@)',
+      message: 'La contraseña debe tener al menos 8 caracteres, una mayuscula, un número y un caracter especial.',
+      buttons: ['Aceptar']
+    });
+
+    await alert.present();
   }
 
   async formAccess() {

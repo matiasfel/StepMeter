@@ -30,7 +30,7 @@ height: 50%;
   width: 100%;
   height: 100%;
   background-color: #0a0a0a;
-  margin-top: 12vh;
+  margin-top: 20vh;
 }
 
 .form-space { /* Espacio del formulario */
@@ -90,6 +90,15 @@ height: 50%;
   width: 100%;
 }
 
+.form-space .passwordAlert {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .form-space .haveAccount {
   text-align: center;
   align-self: center;
@@ -107,7 +116,7 @@ height: 50%;
 
 @media only screen and (max-width: 375px) {
   .register {
-    margin-top: 14vh;
+    margin-top: 12vh;
   }
 
   .form-space h1 {

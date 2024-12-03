@@ -2,7 +2,7 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { FirebaseLoginService } from "src/app/services/firebase-login.service";
+import { FirebaseLoginService } from "src/app/services/firebaseService/firebase-login.service";
 
 export const environment = {
   production: false,

@@ -14,15 +14,21 @@ export class FirebaseLoginService {
     private router: Router
   ) { }
 
+  // Login method
+
   login(email: string,password: string){
     return this.fireAuth.signInWithEmailAndPassword(email, password);
   }
+
+  // Logout method
 
   logout(){
     this.fireAuth.signOut().then(() => {
       this.router.navigate(['/login']);
     });
   }
+
+  // Register method
 
   async createUser(email: string,password: string, name: string){
     const userCredential = await this.fireAuth.createUserWithEmailAndPassword(email, password);
@@ -35,6 +41,8 @@ export class FirebaseLoginService {
     });
     return userCredential;
   }
+
+  // Password recovery method
 
   async recovery(email: string){
     return this.fireAuth.sendPasswordResetEmail(email);

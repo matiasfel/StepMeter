@@ -95,8 +95,10 @@
   }
   
   .form-space .haveAccount {
+    text-align: center;
     align-self: center;
     margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
     color: #fff;
   }
   
@@ -110,21 +112,5 @@
   /* Media querys for iPhone SE */
   
   @media only screen and (max-width: 1920px) and (max-height: 667px) {
-    .register {
-        margin-top: 12vh;
-    }
-  
-    .form-space h1 {
-      font-size: 1.5rem;
-    }
-  
-    .form-space form button {
-      padding: 0.9rem;
-      font-size: 0.8rem;
-    }
-  
-    .forgot-pass {
-      font-size: 0.8rem;
-    }
   
   }

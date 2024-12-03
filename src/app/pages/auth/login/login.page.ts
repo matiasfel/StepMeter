@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { FirebaseLoginService } from 'src/app/services/firebase-login.service';
-import { LocalStorageIonicService } from 'src/app/services/local-storage-ionic.service';
+import { FirebaseLoginService } from 'src/app/services/firebaseService/firebase-login.service';
+import { LocalStorageIonicService } from 'src/app/services/storageService/local-storage-ionic.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { firstValueFrom } from 'rxjs';
 
@@ -14,9 +14,11 @@ import { firstValueFrom } from 'rxjs';
 })
 export class LoginPage implements OnInit {
 
-  email:string = "";
-  password:string = "";
+  // Variables para almacenar el email y la contraseña ingresados por el usuario
+  email: string = "";
+  password: string = "";
 
+  // Inyección de dependencias necesarias para el funcionamiento del componente
   constructor(
     private toastController: ToastController,
     private loadingController: LoadingController,
@@ -27,10 +29,11 @@ export class LoginPage implements OnInit {
     private router: Router,
   ) { }
 
+  // Método para mostrar un toast de éxito
   async presentSuccessToast() {
     const toast = await this.toastController.create({
       message: 'Inicio de sesión exitoso.',
-      position: 'bottom',  // Cambia 'positionAnchor' por 'position'
+      position: 'bottom',
       duration: 5000,
       color: 'light',
       buttons: [
@@ -43,6 +46,7 @@ export class LoginPage implements OnInit {
     toast.present();
   }
 
+  // Método para mostrar una alerta de error
   async presentErrorAlert(message: string) {
     const alert = await this.alertController.create({
       header: 'Inicio de sesión',
@@ -52,6 +56,7 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
+  // Método para mostrar un loading spinner
   async presentLoading() {
     const loading = await this.loadingController.create({
       message: 'Iniciando sesión...',
@@ -62,47 +67,38 @@ export class LoginPage implements OnInit {
     return loading;
   }
 
+  // Método que se ejecuta al inicializar el componente
   ngOnInit() {
   }
 
+  // Método para manejar el acceso del formulario de inicio de sesión
   async formAccess() {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    // Validación de campos vacíos
     if (!this.email || !this.password) {
       this.presentErrorAlert('Por favor completa todos los campos.');
       return;
     }
 
+    // Validación de formato de email
     if (!emailPattern.test(this.email)) {
       this.presentErrorAlert('Por favor ingresa un correo electrónico válido.');
       return;
     }
 
+    // Mostrar loading spinner
     const loading = await this.presentLoading();
 
+    // Intentar iniciar sesión después de un pequeño retraso
     setTimeout(async () => {
       this.loginFirebase.login(this.email, this.password).then(async (res) => {
         if (!res.user) {
           this.presentErrorAlert('Error al obtener el usuario.');
           return;
         }
-
-        // Obtener el documento del usuario
-        const userDoc = await firstValueFrom(this.firestore.collection('users').doc(res.user.uid).get());
-        if (!userDoc.exists) {
-          this.presentErrorAlert('Usuario no encontrado.');
-          return;
-        }
-
-        const userData = userDoc.data() as { name: string };
-
-        // Guardar datos en el almacenamiento local
-        this.localStorageIonicService.set('user', {
-          name: userData.name,
-          email: this.email,
-          password: this.password
-        });
-
+        
+        // Mostrar toast de éxito y redirigir al dashboard
         this.presentSuccessToast();
         this.router.navigate(['/dashboard']);
       }).catch((err) => {
