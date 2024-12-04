@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -8,13 +8,18 @@ import { DashboardPageRoutingModule } from './dashboard-routing.module';
 
 import { DashboardPage } from './dashboard.page';
 
+import { MapComponent } from 'src/app/components/map/map.component';
+import { GoogleMapsModule } from '@angular/google-maps';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DashboardPageRoutingModule
+    DashboardPageRoutingModule,
+    GoogleMapsModule
   ],
-  declarations: [DashboardPage]
+  declarations: [DashboardPage, MapComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardPageModule {}

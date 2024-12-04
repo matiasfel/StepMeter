@@ -1,0 +1,21 @@
+google-map {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.center-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 4rem;
+  height: 4rem;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 1000;  /* Asegúrate de que el botón esté por encima del mapa */
+}
+
