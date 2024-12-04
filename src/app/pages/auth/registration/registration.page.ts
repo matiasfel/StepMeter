@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { FirebaseLoginService } from 'src/app/services/firebaseService/firebase-login.service';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-registration',
@@ -19,8 +20,14 @@ export class RegistrationPage implements OnInit {
     private loadingController: LoadingController,
     private alertController: AlertController,
     private access: FirebaseLoginService,
-    private router: Router
+    private router: Router,
+    private storage: Storage
   ) { }
+
+  async ngOnInit() {
+    await this.storage.create();
+    await this.storage.set('SessionID', false);
+  }
 
   async presentSuccessToast() {
     const toast = await this.toastController.create({
@@ -56,10 +63,7 @@ export class RegistrationPage implements OnInit {
     await loading.present();
     return loading;
   }
-
-  ngOnInit() {
-  }
-
+  
   async passwordAlert() {
     
     const alert = await this.alertController.create({

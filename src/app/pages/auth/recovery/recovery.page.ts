@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { FirebaseLoginService } from 'src/app/services/firebaseService/firebase-login.service';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-recovery',
@@ -17,10 +18,13 @@ export class RecoveryPage implements OnInit {
     private loadingController: LoadingController,
     private alertController: AlertController,
     private loginFirebase: FirebaseLoginService,
-    private router: Router
+    private router: Router,
+    private storage: Storage
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.storage.create();
+    await this.storage.set('SessionID', false);
   }
 
   async presentSuccessToast() {

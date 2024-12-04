@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { homeGuard } from './guards/home.guard';
+import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -9,23 +11,28 @@ const routes: Routes = [
   },
   {
     path: 'landing',
-    loadChildren: () => import('./pages/auth/landing/landing.module').then( m => m.LandingPageModule)
+    loadChildren: () => import('./pages/auth/landing/landing.module').then( m => m.LandingPageModule),
+    canActivate: [authGuard]
   },
   {
     path: 'login',
-    loadChildren: () => import('./pages/auth/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./pages/auth/login/login.module').then( m => m.LoginPageModule),
+    canActivate: [authGuard]
   },
   {
     path: 'registration',
-    loadChildren: () => import('./pages/auth/registration/registration.module').then( m => m.RegistrationPageModule)
+    loadChildren: () => import('./pages/auth/registration/registration.module').then( m => m.RegistrationPageModule),
+    canActivate: [authGuard]
   },
   {
     path: 'recovery',
-    loadChildren: () => import('./pages/auth/recovery/recovery.module').then( m => m.RecoveryPageModule)
+    loadChildren: () => import('./pages/auth/recovery/recovery.module').then( m => m.RecoveryPageModule),
+    canActivate: [authGuard]
   },
   {
     path: 'dashboard',
     loadChildren: () => import('./pages/home/dashboard/dashboard.module').then( m => m.DashboardPageModule),
+    canActivate: [homeGuard]
   }
 ];
 
@@ -35,4 +42,5 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule { }

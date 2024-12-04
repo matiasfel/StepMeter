@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { FirebaseLoginService } from 'src/app/services/firebaseService/firebase-login.service';
-import { LocalStorageIonicService } from 'src/app/services/storageService/local-storage-ionic.service';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { firstValueFrom } from 'rxjs';
+import { Storage } from '@ionic/storage-angular';
+
 
 @Component({
   selector: 'app-login-page',
@@ -24,8 +23,7 @@ export class LoginPage implements OnInit {
     private loadingController: LoadingController,
     private alertController: AlertController,
     private loginFirebase: FirebaseLoginService,
-    private localStorageIonicService: LocalStorageIonicService,
-    private firestore: AngularFirestore,
+    private storage : Storage,
     private router: Router,
   ) { }
 
@@ -67,10 +65,6 @@ export class LoginPage implements OnInit {
     return loading;
   }
 
-  // Método que se ejecuta al inicializar el componente
-  ngOnInit() {
-  }
-
   // Método para manejar el acceso del formulario de inicio de sesión
   async formAccess() {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -97,8 +91,14 @@ export class LoginPage implements OnInit {
           this.presentErrorAlert('Error al obtener el usuario.');
           return;
         }
+
         
         // Mostrar toast de éxito y redirigir al dashboard
+        this.storage.set('name', res.user.displayName);
+        this.storage.set('email', this.email);
+        this.storage.set('password', this.password);
+        this.storage.set('uid', res.user.uid);
+        this.storage.set('SessionID', true)
         this.presentSuccessToast();
         this.router.navigate(['/dashboard']);
       }).catch((err) => {
@@ -108,4 +108,10 @@ export class LoginPage implements OnInit {
       await loading.dismiss();
     }, 500);
   }
+
+    // Método que se ejecuta al inicializar el componente
+    async ngOnInit() {
+      await this.storage.create();
+      await this.storage.set('SessionID', false);
+    }
 }

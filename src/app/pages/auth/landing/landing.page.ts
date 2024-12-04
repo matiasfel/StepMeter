@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-landing',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LandingPage implements OnInit {
 
-  constructor() { }
+  constructor(private storage: Storage) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.storage.create();
+    await this.storage.set('SessionID', false);
   }
 
 }
