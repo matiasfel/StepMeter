@@ -43,7 +43,14 @@ const routes: Routes = [
     path: 'profile',
     loadChildren: () => import('./pages/home/profile/profile.module').then( m => m.ProfilePageModule),
     canActivate: [homeGuard]
+  },
+  
+  {
+    path: 'user-profile',
+    loadChildren: () => import('./pages/home/user-profile/user-profile.module').then( m => m.UserProfilePageModule)
   }
+
+  
 ];
 
 @NgModule({
