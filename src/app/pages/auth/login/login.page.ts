@@ -33,7 +33,7 @@ export class LoginPage implements OnInit {
       message: 'Inicio de sesión exitoso.',
       position: 'bottom',
       duration: 5000,
-      color: 'light',
+      color: 'dark',
       buttons: [
         {
           icon: 'close',
@@ -94,10 +94,12 @@ export class LoginPage implements OnInit {
 
         
         // Mostrar toast de éxito y redirigir al dashboard
-        this.storage.set('name', res.user.displayName);
-        this.storage.set('email', this.email);
-        this.storage.set('password', this.password);
-        this.storage.set('uid', res.user.uid);
+        this.storage.set('user', {
+          email: this.email,
+          password: this.password,
+          displayName: res.user.displayName,
+          uid: res.user.uid
+        });
         this.storage.set('SessionID', true)
         this.presentSuccessToast();
         this.router.navigate(['/dashboard']);

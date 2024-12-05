@@ -7,6 +7,7 @@
     
       <div class="form-space">
         <h1>Recupera tu cuenta</h1>
+        <ion-icon name="lock-closed-outline"></ion-icon>
         <form (submit)="formAccess()">
 
           <span class="inputTitle">Correo electroníco</span>
@@ -27,7 +28,8 @@
           <div class="validation">
             <p>
               Le haremos llegar un correo electronico con la informacion 
-              para recuperar su contraseña, en caso de no ser enviado intente
+              para recuperar su contraseña, en caso de <strong>NO</strong> ser enviado intentelo
+              de nuevo.
             </p>
           </div>
 
@@ -42,7 +44,7 @@
           </ion-button>
         </form>
 
-        <span class="haveAccount">Ya tienes una cuenta? <br>
+        <span class="haveAccount">¿Te has acordado de tu contraseña?<br>
           <a routerLink="/login" routerDirection="back">inicia sesion.</a>
         </span>
 

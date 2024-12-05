@@ -1,10 +1,15 @@
+.custom-menu-button {
+    --background: transparent;
+    --color: red; /* Cambia 'red' por el color que desees */
+  }
+
 .profileInfo {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .profileInfo ion-avatar {
@@ -13,5 +18,17 @@
 }
 
 .profileInfo ion-label {
-    margin-top: 10px;
+    margin-top: 20px;
 }
+
+.profileInfo ion-label p {
+    color: black;
+    font-size: 20px;
+    font-weight: 200;
+}
+
+.logoutIcon {
+    color: red;
+}
+
+// Navbar css
