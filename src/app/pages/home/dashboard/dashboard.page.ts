@@ -14,6 +14,14 @@ export class DashboardPage implements OnInit {
   displayName!: string;
   email!: string;
 
+  calories = 0;
+  distance = 0;
+
+  achivievements = 0;
+
+  steps: any[] = [];
+  routes: any[] = [];
+
   constructor(
     private router: Router,
     private firebaseLoginService: FirebaseLoginService,
