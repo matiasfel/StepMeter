@@ -33,6 +33,16 @@ const routes: Routes = [
     path: 'dashboard',
     loadChildren: () => import('./pages/home/dashboard/dashboard.module').then( m => m.DashboardPageModule),
     canActivate: [homeGuard]
+  },
+  {
+    path: 'settings',
+    loadChildren: () => import('./pages/home/settings/settings.module').then( m => m.SettingsPageModule),
+    canActivate: [homeGuard]
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./pages/home/profile/profile.module').then( m => m.ProfilePageModule),
+    canActivate: [homeGuard]
   }
 ];
 

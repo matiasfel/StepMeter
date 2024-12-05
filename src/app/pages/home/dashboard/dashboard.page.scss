@@ -1,0 +1,17 @@
+.profileInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.profileInfo ion-avatar {
+    width: 64px;
+    height: 64px;
+}
+
+.profileInfo ion-label {
+    margin-top: 10px;
+}

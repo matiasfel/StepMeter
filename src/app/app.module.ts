@@ -15,8 +15,6 @@ import { environment } from 'src/environments/environment';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
 
-import { MapComponent } from './components/map/map.component';
-
 @NgModule({
   declarations: [AppComponent],
   imports: [

@@ -8,14 +8,19 @@ google-map {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  width: 4rem;
-  height: 4rem;
-  background-color: #000;
-  color: white;
+  width: 3rem;
+  height: 3rem;
+  background-color: rgb(111, 204, 111);
   border: none;
   border-radius: 50%;
   font-size: 16px;
   cursor: pointer;
   z-index: 1000;  /* Asegúrate de que el botón esté por encima del mapa */
+}
+
+.center-button img {
+  width: 2rem;
+  height: 2rem;
+  margin-top: 2px;
 }
 

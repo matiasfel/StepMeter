@@ -9,11 +9,11 @@ import { GoogleMap } from '@angular/google-maps';
 export class MapComponent implements AfterViewInit {
   @ViewChild(GoogleMap) googleMap!: GoogleMap;
 
-  // Coordenadas iniciales (puedes cambiar a otra ubicación si lo deseas)
+  // Coordenadas iniciales
   center: google.maps.LatLngLiteral = { lat: -33.4489, lng: -70.6693 }; // Santiago, Chile
   zoom = 12;
 
-  // Opciones personalizadas
+  // Opciones personalizadas del mapa
   options: google.maps.MapOptions = {
     zoomControl: false,
     mapTypeControl: false,
@@ -21,88 +21,31 @@ export class MapComponent implements AfterViewInit {
     fullscreenControl: false,
     scaleControl: true,
     rotateControl: true,
-    styles: [
-      {
-        "elementType": "geometry",
-        "stylers": [{ "color": "#ebe3cd" }]
-      },
-      {
-        "elementType": "labels.text.fill",
-        "stylers": [{ "color": "#523735" }]
-      },
-      {
-        "elementType": "labels.text.stroke",
-        "stylers": [{ "color": "#f5f1e6" }]
-      },
-      {
-        "featureType": "administrative",
-        "elementType": "geometry.stroke",
-        "stylers": [{ "color": "#c9b2a6" }]
-      },
-      {
-        "featureType": "administrative.land_parcel",
-        "elementType": "geometry.stroke",
-        "stylers": [{ "color": "#dcd2be" }]
-      },
-      {
-        "featureType": "administrative",
-        "elementType": "labels.text.fill",
-        "stylers": [{ "color": "#444444" }]
-      },
-      {
-        "featureType": "landscape",
-        "elementType": "all",
-        "stylers": [{ "color": "#f2f2f2" }]
-      },
-      {
-        "featureType": "poi",
-        "elementType": "all",
-        "stylers": [{ "visibility": "off" }]
-      },
-      {
-        "featureType": "road",
-        "elementType": "all",
-        "stylers": [
-          { "saturation": -100 },
-          { "lightness": 45 }
-        ]
-      },
-      {
-        "featureType": "road.highway",
-        "elementType": "all",
-        "stylers": [{ "visibility": "simplified" }]
-      },
-      {
-        "featureType": "road.arterial",
-        "elementType": "labels.icon",
-        "stylers": [{ "visibility": "off" }]
-      },
-      {
-        "featureType": "transit",
-        "elementType": "all",
-        "stylers": [{ "visibility": "off" }]
-      },
-      {
-        "featureType": "water",
-        "elementType": "all",
-        "stylers": [
-          { "color": "#46bcec" },
-          { "visibility": "on" }
-        ]
-      }
-    ],
+    minZoom: 8,
+    maxZoom: 18,
+    styles: []
   };
 
   marker: google.maps.Marker | null = null;
   map: google.maps.Map | null = null;
+  directionsService: google.maps.DirectionsService = new google.maps.DirectionsService();
+  directionsRenderer: google.maps.DirectionsRenderer = new google.maps.DirectionsRenderer();
 
   constructor() {
-    // Establece una ubicación inicial por si la geolocalización no funciona
+    // Definición de la ubicación inicial (Santiago)
     this.center = { lat: -33.4489, lng: -70.6693 }; // Santiago, Chile
   }
 
   ngAfterViewInit() {
-    this.getCurrentLocation();
+    this.initMap();
+    this.getCurrentLocation(); // Obtener la ubicación y calcular la ruta
+  }
+
+  initMap() {
+    if (this.googleMap && this.googleMap.googleMap) {
+      this.map = this.googleMap.googleMap;
+      this.directionsRenderer.setMap(this.map); // Establecer el mapa en el renderer
+    }
   }
 
   // Función para obtener la geolocalización y poner el marcador
@@ -110,24 +53,27 @@ export class MapComponent implements AfterViewInit {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // Obtén las coordenadas de la ubicación actual
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
-
-          // Actualiza el centro del mapa
           this.center = { lat, lng };
 
           // Centra el mapa en la ubicación actual
-          if (this.googleMap) {
-            this.googleMap?.googleMap?.setCenter(this.center);
+          if (this.map) {
+            this.map.setCenter(this.center);
           }
 
-          // Si el marcador ya existe, actualízalo. Si no, créalo.
+          // Actualiza o añade el marcador
           if (this.marker) {
             this.marker.setPosition(this.center);
           } else {
             this.addMarker();
           }
+
+          // Definir el destino (Santiago, Chile)
+          const destination = { lat: -33.4489, lng: -70.6693 };
+
+          // Calcular y mostrar la ruta desde la ubicación actual a Santiago
+          this.calculateAndDisplayRoute(this.center, destination);
         },
         (error) => {
           console.error('Error al obtener la geolocalización', error);
@@ -139,10 +85,10 @@ export class MapComponent implements AfterViewInit {
   }
 
   addMarker() {
-    if (this.center && this.googleMap) {
+    if (this.center && this.map) {
       this.marker = new google.maps.Marker({
         position: this.center,
-        map: this.googleMap.googleMap,
+        map: this.map,
         title: 'Mi ubicación',
         icon: {
           url: 'assets/images/mark.png',  // Ruta al icono personalizado
@@ -151,29 +97,35 @@ export class MapComponent implements AfterViewInit {
       });
     }
   }
-  
+
+  // Función para calcular y mostrar la ruta
+  calculateAndDisplayRoute(start: google.maps.LatLngLiteral, end: google.maps.LatLngLiteral) {
+    const request: google.maps.DirectionsRequest = {
+      origin: start,  // Punto de inicio
+      destination: end,  // Punto de destino (Santiago, Chile en este caso)
+      travelMode: google.maps.TravelMode.DRIVING,  // Modo de transporte (puedes cambiar a WALKING o BICYCLING)
+    };
+
+    // Calcular la ruta usando el DirectionsService
+    this.directionsService.route(request, (response, status) => {
+      if (status === google.maps.DirectionsStatus.OK) {
+        // Si la respuesta es OK, renderiza la ruta
+        this.directionsRenderer.setDirections(response);
+      } else {
+        console.error('Error al obtener la ruta:', status);
+      }
+    });
+  }
+
   // Función para centrar el mapa
   centerMap() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // Obtén las coordenadas de la ubicación actual
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-
-          // Actualiza el centro del mapa
-          this.center = { lat, lng };
-
-          // Centra el mapa en la ubicación actual
+          this.updateMapCenter(position.coords.latitude, position.coords.longitude);
+          this.zoom = 14;
           if (this.googleMap) {
-            this.googleMap?.googleMap?.setCenter(this.center);
-          }
-
-          // Si el marcador ya existe, actualízalo. Si no, se créa.
-          if (this.marker) {
-            this.marker.setPosition(this.center);
-          } else {
-            this.addMarker();
+            this.googleMap.googleMap?.setZoom(this.zoom);
           }
         },
         (error) => {
@@ -182,6 +134,21 @@ export class MapComponent implements AfterViewInit {
       );
     } else {
       alert('La geolocalización no está disponible en este dispositivo.');
+    }
+  }
+
+  // Función para actualizar el centro del mapa y el marcador
+  updateMapCenter(lat: number, lng: number) {
+    this.center = { lat, lng };
+
+    if (this.googleMap) {
+      this.googleMap.googleMap?.setCenter(this.center);
+    }
+
+    if (this.marker) {
+      this.marker.setPosition(this.center);
+    } else {
+      this.addMarker();
     }
   }
 }
