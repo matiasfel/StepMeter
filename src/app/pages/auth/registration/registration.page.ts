@@ -63,23 +63,25 @@ export class RegistrationPage implements OnInit {
     await loading.present();
     return loading;
   }
-  
+
   async passwordAlert() {
-    
     const alert = await this.alertController.create({
       header: 'Contraseña',
       subHeader: '(Ej: Abcd1234@)',
       message: 'La contraseña debe tener al menos 8 caracteres, una mayuscula, un número y un caracter especial.',
       buttons: ['Aceptar']
     });
-
     await alert.present();
   }
 
   async formAccess() {
-
     if (!this.username || !this.email || !this.password) {
       this.presentErrorAlert('Debes completar todos los campos para crear una cuenta.');
+      return;
+    }
+
+    if (!/^[A-Za-zÁÉÍÓÚáéíóú]+\s[A-Za-zÁÉÍÓÚáéíóú]+$/.test(this.username)) {
+      this.presentErrorAlert('El nombre debe tener el formato "(NOMBRE) (APELLIDO)".');
       return;
     }
 
@@ -98,15 +100,14 @@ export class RegistrationPage implements OnInit {
     }
 
     const loading = await this.presentLoading();
-
-    setTimeout(async () => {
-      this.access.createUser(this.email, this.password, this.username).then(() => {
-        this.presentSuccessToast();
-        this.router.navigate(['/login']);
-      }).catch(() => {
-        this.presentErrorAlert('El correo electrónico ya está en uso.');
-      });
-      await loading.dismiss();
-    }, 1000);
+    
+    this.access.createUser(this.email, this.password, this.username).then(() => {
+      loading.dismiss();
+      this.presentSuccessToast();
+      this.router.navigate(['/login']);
+    }).catch(() => {
+      loading.dismiss();
+      this.presentErrorAlert('El correo electrónico ya está en uso.');
+    });
   }
 }

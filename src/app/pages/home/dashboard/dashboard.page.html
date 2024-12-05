@@ -1,4 +1,46 @@
-<app-menu [email]="email" (logout)="logout()"></app-menu>
+<ion-menu contentId="main-content" side="start" menuId="first">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>StepMeter</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <section class="profileInfo">
+      <ion-avatar slot="start">
+        <img src="../../../../assets/images/profileUnknow.png">
+      </ion-avatar>
+      <ion-label>
+        <p>Hola, {{ displayName }}</p>
+      </ion-label>
+    </section>
+    <ion-list>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/dashboard">
+          <ion-icon slot="start" name="home"></ion-icon>
+          <ion-label>Inicio</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/profile">
+          <ion-icon slot="start" name="person"></ion-icon>
+          <ion-label>Perfil</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/settings">
+          <ion-icon slot="start" name="settings"></ion-icon>
+          <ion-label>Configuración</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item (click)="logout()">
+          <ion-icon slot="start" name="log-out-outline" class="logoutIcon"></ion-icon>
+          <ion-label color="danger">Cerrar sesión</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+    </ion-list>
+  </ion-content>
+</ion-menu>
 
 <div class="ion-page" id="main-content">
   <ion-header>
@@ -12,5 +54,61 @@
 
   <ion-content>
     <app-map></app-map>
+
+    <section>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Estadísticas</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-label>Distancia recorrida</ion-label> <br>
+                <ion-text>{{ distance }}</ion-text>
+              </ion-col>
+              <ion-col>
+                <ion-label>Calorías quemadas</ion-label> <br>
+                <ion-text>{{ calories }}</ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    </section>
+
+    <section>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Últimos pasos</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item *ngFor="let step of steps">
+              <ion-label>{{ step.date }}</ion-label>
+              <ion-label>{{ step.steps }}</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    </section>
+
+    <section>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Últimas rutas</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item *ngFor="let route of routes">
+              <ion-label>{{ route.date }}</ion-label>
+              <ion-label>{{ route.distance }}</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    </section>
+
   </ion-content>
+
 </div>

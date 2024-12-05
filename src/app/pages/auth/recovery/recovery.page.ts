@@ -63,11 +63,22 @@ export class RecoveryPage implements OnInit {
   }
 
   async formAccess(){
+
+    if (this.email == "") {
+      this.presentErrorAlert("Por favor, ingrese un correo electrónico.");
+      return;
+    }
+
+    if (!this.email.includes("@") || !this.email.includes(".")) {
+      this.presentErrorAlert("Por favor, ingrese un correo electrónico válido.");
+      return;
+    }
+
     this.loginFirebase.recovery(this.email).then(() => {
       this.presentSuccessToast();
       this.router.navigate(['/login']);
     }).catch(() => {
-      this.presentErrorAlert("Ocurrio un error al enviar el correo electrónico.");
+      this.presentErrorAlert("El correo que ha ingresado no está registrado.");
     });
   }
 

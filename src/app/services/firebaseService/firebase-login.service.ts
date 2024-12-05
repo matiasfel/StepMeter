@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+import { updateProfile } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -28,16 +29,22 @@ export class FirebaseLoginService {
 
   // Register method
   async createUser(email: string, password: string, name: string) {
+    // Crear usuario en Firebase Authentication
     const userCredential = await this.fireAuth.createUserWithEmailAndPassword(email, password);
-    const uid = userCredential.user?.uid;
+    const user = userCredential.user;
 
-    // Crear un documento en Firestore con el UID del usuario como ID
-    if (uid) {
+    if (user) {
+      // Actualizar el displayName en el perfil de Firebase Authentication
+      await updateProfile(user, {
+        displayName: name
+      });
+
+      // Almacenar datos adicionales en Firestore
+      const uid = user.uid;
       await this.firestore.doc(`users/${uid}`).set({
         email: email,
         name: name,
-        uid: uid, // Asegúrate de que el UID esté incluido en el documento
-        phone: ''  // Puedes agregar otros campos si lo necesitas
+        uid: uid
       });
     }
 
@@ -48,16 +55,5 @@ export class FirebaseLoginService {
   async recovery(email: string) {
     return this.fireAuth.sendPasswordResetEmail(email);
   }
-
-  // Método para obtener los datos del usuario desde Firestore
- 
-
-  // Método para actualizar los datos del usuario en Firestore
-  async updateUserData(updatedData: any) {
-    const user = await this.fireAuth.currentUser;
-    if (user) {
-      const userRef = this.firestore.collection('users').doc(user.uid);
-      await userRef.update(updatedData);  // Actualizar los datos del usuario en Firestore
-    }
-  }
+  
 }

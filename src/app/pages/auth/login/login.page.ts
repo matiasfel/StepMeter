@@ -32,14 +32,8 @@ export class LoginPage implements OnInit {
     const toast = await this.toastController.create({
       message: 'Inicio de sesión exitoso.',
       position: 'bottom',
-      duration: 5000,
-      color: 'light',
-      buttons: [
-        {
-          icon: 'close',
-          role: 'cancel',
-        }
-      ]
+      duration: 2000,
+      color: 'dark',
     });
     toast.present();
   }
@@ -91,13 +85,14 @@ export class LoginPage implements OnInit {
           this.presentErrorAlert('Error al obtener el usuario.');
           return;
         }
-
         
         // Mostrar toast de éxito y redirigir al dashboard
-        this.storage.set('name', res.user.displayName);
-        this.storage.set('email', this.email);
-        this.storage.set('password', this.password);
-        this.storage.set('uid', res.user.uid);
+        this.storage.set('user', {
+          email: this.email,
+          password: this.password,
+          displayName: res.user.displayName,
+          uid: res.user.uid
+        });
         this.storage.set('SessionID', true)
         this.presentSuccessToast();
         this.router.navigate(['/dashboard']);
