@@ -55,4 +55,5 @@ export class FirebaseLoginService {
   async recovery(email: string) {
     return this.fireAuth.sendPasswordResetEmail(email);
   }
+  
 }
