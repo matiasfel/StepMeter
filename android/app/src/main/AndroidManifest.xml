@@ -24,7 +24,6 @@
 
         </activity>
 
-        
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -38,6 +37,5 @@
 
     <!-- Permissions -->
 
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
