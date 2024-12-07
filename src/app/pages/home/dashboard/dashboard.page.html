@@ -21,9 +21,9 @@
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle auto-hide="true">
-        <ion-item routerLink="/profile">
+        <ion-item disabled routerLink="/profile">
           <ion-icon slot="start" name="person"></ion-icon>
-          <ion-label>Perfil</ion-label>
+          <ion-label>Perfil <span style="color: red;">(proximamente)</span></ion-label>
         </ion-item>
       </ion-menu-toggle>
 
@@ -58,58 +58,4 @@
 
 <ion-content id="main-content">
   <app-map></app-map>
-
-  <section>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Estadísticas</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-grid>
-          <ion-row>
-            <ion-col>
-              <ion-label>Distancia recorrida</ion-label> <br>
-              <ion-text>{{ distance }}</ion-text>
-            </ion-col>
-            <ion-col>
-              <ion-label>Calorías quemadas</ion-label> <br>
-              <ion-text>{{ calories }}</ion-text>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
-    </ion-card>
-  </section>
-
-  <section>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Últimos pasos</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-list>
-          <ion-item *ngFor="let step of steps">
-            <ion-label>{{ step.date }}</ion-label>
-            <ion-label>{{ step.steps }}</ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-  </section>
-
-  <section>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Últimas rutas</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-list>
-          <ion-item *ngFor="let route of routes">
-            <ion-label>{{ route.date }}</ion-label>
-            <ion-label>{{ route.distance }}</ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-  </section>
 </ion-content>

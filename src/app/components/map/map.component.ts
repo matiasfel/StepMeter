@@ -1,5 +1,6 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-map',
@@ -9,9 +10,17 @@ import { GoogleMap } from '@angular/google-maps';
 export class MapComponent implements AfterViewInit {
   @ViewChild(GoogleMap) googleMap!: GoogleMap;
 
+  estimatedTime: string | null = null;
+  lastDestination: google.maps.LatLngLiteral | null = null;
+
   // Coordenadas iniciales
-  center: google.maps.LatLngLiteral = { lat: -33.4489, lng: -70.6693 }; // Santiago, Chile
+  center: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
   zoom = 12;
+
+  // Variables para estadísticas y pasos
+  distance: number = 0; // En kilómetros
+  calories: number = 0; // Calorías estimadas
+  steps: number = 0; // Contador de pasos
 
   // Opciones personalizadas del mapa
   options: google.maps.MapOptions = {
@@ -24,175 +33,25 @@ export class MapComponent implements AfterViewInit {
     minZoom: 8,
     maxZoom: 16,
     styles: [
-      {
-          "featureType": "all",
-          "elementType": "geometry.fill",
-          "stylers": [
-              {
-                  "weight": "2.00"
-              }
-          ]
-      },
-      {
-          "featureType": "all",
-          "elementType": "geometry.stroke",
-          "stylers": [
-              {
-                  "color": "#9c9c9c"
-              }
-          ]
-      },
-      {
-          "featureType": "all",
-          "elementType": "labels.text",
-          "stylers": [
-              {
-                  "visibility": "on"
-              }
-          ]
-      },
-      {
-          "featureType": "landscape",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "color": "#f2f2f2"
-              }
-          ]
-      },
-      {
-          "featureType": "landscape",
-          "elementType": "geometry.fill",
-          "stylers": [
-              {
-                  "color": "#ffffff"
-              }
-          ]
-      },
-      {
-          "featureType": "landscape.man_made",
-          "elementType": "geometry.fill",
-          "stylers": [
-              {
-                  "color": "#ffffff"
-              }
-          ]
-      },
-      {
-          "featureType": "poi",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "visibility": "off"
-              }
-          ]
-      },
-      {
-          "featureType": "road",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "saturation": -100
-              },
-              {
-                  "lightness": 45
-              }
-          ]
-      },
-      {
-          "featureType": "road",
-          "elementType": "geometry.fill",
-          "stylers": [
-              {
-                  "color": "#eeeeee"
-              }
-          ]
-      },
-      {
-          "featureType": "road",
-          "elementType": "labels.text.fill",
-          "stylers": [
-              {
-                  "color": "#7b7b7b"
-              }
-          ]
-      },
-      {
-          "featureType": "road",
-          "elementType": "labels.text.stroke",
-          "stylers": [
-              {
-                  "color": "#ffffff"
-              }
-          ]
-      },
-      {
-          "featureType": "road.highway",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "visibility": "simplified"
-              }
-          ]
-      },
-      {
-          "featureType": "road.arterial",
-          "elementType": "labels.icon",
-          "stylers": [
-              {
-                  "visibility": "off"
-              }
-          ]
-      },
-      {
-          "featureType": "transit",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "visibility": "off"
-              }
-          ]
-      },
-      {
-          "featureType": "water",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "color": "#46bcec"
-              },
-              {
-                  "visibility": "on"
-              }
-          ]
-      },
-      {
-          "featureType": "water",
-          "elementType": "geometry.fill",
-          "stylers": [
-              {
-                  "color": "#b5dae1"
-              }
-          ]
-      },
-      {
-          "featureType": "water",
-          "elementType": "labels.text.fill",
-          "stylers": [
-              {
-                  "color": "#070707"
-              }
-          ]
-      },
-      {
-          "featureType": "water",
-          "elementType": "labels.text.stroke",
-          "stylers": [
-              {
-                  "color": "#ffffff"
-              }
-          ]
-      }
-  ]
+      { "featureType": "all", "elementType": "geometry.fill", "stylers": [{ "weight": 2 }] },
+      { "featureType": "all", "elementType": "geometry.stroke", "stylers": [{ "color": "#9c9c9c" }] },
+      { "featureType": "all", "elementType": "labels.text", "stylers": [{ "visibility": "on" }] },
+      { "featureType": "landscape", "elementType": "all", "stylers": [{ "color": "#f2f2f2" }] },
+      { "featureType": "landscape", "elementType": "geometry.fill", "stylers": [{ "color": "#ffffff" }] },
+      { "featureType": "landscape.man_made", "elementType": "geometry.fill", "stylers": [{ "color": "#ffffff" }] },
+      { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] },
+      { "featureType": "road", "elementType": "all", "stylers": [{ "saturation": -100 }, { "lightness": 45 }] },
+      { "featureType": "road", "elementType": "geometry.fill", "stylers": [{ "color": "#eeeeee" }] },
+      { "featureType": "road", "elementType": "labels.text.fill", "stylers": [{ "color": "#7b7b7b" }] },
+      { "featureType": "road", "elementType": "labels.text.stroke", "stylers": [{ "color": "#ffffff" }] },
+      { "featureType": "road.highway", "elementType": "all", "stylers": [{ "visibility": "simplified" }] },
+      { "featureType": "road.arterial", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] },
+      { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "off" }] },
+      { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#46bcec" }, { "visibility": "on" }] },
+      { "featureType": "water", "elementType": "geometry.fill", "stylers": [{ "color": "#b5dae1" }] },
+      { "featureType": "water", "elementType": "labels.text.fill", "stylers": [{ "color": "#070707" }] },
+      { "featureType": "water", "elementType": "labels.text.stroke", "stylers": [{ "color": "#ffffff" }] }
+    ]
   };
 
   marker: google.maps.Marker | null = null;
@@ -201,24 +60,134 @@ export class MapComponent implements AfterViewInit {
   directionsService: google.maps.DirectionsService = new google.maps.DirectionsService();
   directionsRenderer: google.maps.DirectionsRenderer = new google.maps.DirectionsRenderer();
 
-  constructor() {
-    // Definición de la ubicación inicial (Santiago)
-    this.center = { lat: -33.4489, lng: -70.6693 }; // Santiago, Chile
+  constructor(
+    private alertController: AlertController
+  ) {}
+
+  showAlert(header: string, message: string) {
+    this.alertController
+      .create({
+        header,
+        message,
+        buttons: ['Aceptar'],
+      })
+      .then((alert) => alert.present());
+  }
+
+  async promptDestination() {
+    const alert = await this.alertController.create({
+      header: 'Calcular Ruta',
+      inputs: [
+        {
+          name: 'destination',
+          type: 'text',
+          placeholder: 'Ubicación del destino',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Aceptar',
+          handler: async (data) => {
+            const destination = data.destination;
+            if (destination) {
+              try {
+                const geocoder = new google.maps.Geocoder();
+                const results = await geocoder.geocode({ address: destination });
+                if (results.results && results.results[0]) {
+                  const location = results.results[0].geometry.location;
+                  const destinationCoords = {
+                    lat: location.lat(),
+                    lng: location.lng(),
+                  };
+
+                  // Guardar el destino ingresado
+                  this.lastDestination = destinationCoords;
+
+                  // Calcular y mostrar la ruta
+                  this.calculateAndDisplayRoute(this.center, destinationCoords);
+                } else {
+                  this.showAlert('Error', 'No se pudo encontrar la ubicación ingresada.');
+                }
+              } catch (error) {
+                console.error('Error al geocodificar la ubicación', error);
+                this.showAlert('Error', 'Ocurrió un error al buscar la ubicación.');
+              }
+            } else {
+              this.showAlert('Error', 'Debe ingresar una ubicación válida.');
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+  
+  estimateCalories(distance: number): number {
+    const caloriesPerKm = 50;
+    return distance * caloriesPerKm;
+  }
+
+    // Métodos para el marcador de pasos
+  increaseSteps() {
+    this.steps += 1;
+  }
+
+  decreaseSteps() {
+    if (this.steps > 0) {
+      this.steps -= 1;
+    }
+  }
+
+  calculateAndDisplayRoute(
+    start: google.maps.LatLngLiteral,
+    end: google.maps.LatLngLiteral
+  ) {
+    const request: google.maps.DirectionsRequest = {
+      origin: start,
+      destination: end,
+      travelMode: google.maps.TravelMode.WALKING,  // Puedes cambiar esto a TRANSPORT si usas vehículo.
+    };
+  
+    this.directionsService.route(request, (response, status) => {
+      if (status === google.maps.DirectionsStatus.OK && response) {
+        this.directionsRenderer.setDirections(response);
+  
+        // Extraer distancia y tiempo estimado
+        const route = response.routes[0];
+        if (route && route.legs && route.legs[0]) {
+          const leg = route.legs[0];
+          this.distance = leg.distance ? leg.distance.value / 1000 : 0; // Convertir metros a kilómetros
+          this.estimatedTime = leg.duration ? leg.duration.text : 'No se pudo obtener la información de la ruta.'; // Tiempo estimado
+          this.calories = this.estimateCalories(this.distance); // Calcular calorías estimadas
+        } else {
+          this.distance = 0;
+          this.estimatedTime = 'No se pudo obtener la información de la ruta.';
+        }
+      } else {
+        console.error('Error al obtener la ruta:', status);
+        this.distance = 0;
+        this.estimatedTime = 'No se pudo calcular la ruta. Intente nuevamente.';
+      }
+    });
   }
 
   ngAfterViewInit() {
     this.initMap();
-    this.getCurrentLocation(); // Obtener la ubicación y calcular la ruta
+    this.getCurrentLocation();
   }
 
   initMap() {
     if (this.googleMap && this.googleMap.googleMap) {
       this.map = this.googleMap.googleMap;
-      this.directionsRenderer.setMap(this.map); // Establecer el mapa en el renderer
+      this.directionsRenderer.setMap(this.map);
     }
   }
 
-  // Función para obtener la geolocalización y poner el marcador
   getCurrentLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -239,11 +208,10 @@ export class MapComponent implements AfterViewInit {
             this.addMarker();
           }
 
-          // Definir el destino (Santiago, Chile)
-          const destination = { lat: -33.4489, lng: -70.6693 };
-
-          // Calcular y mostrar la ruta desde la ubicación actual a Santiago
-          this.calculateAndDisplayRoute(this.center, destination);
+          // Si hay un destino previo, calcular la ruta hacia él
+          if (this.lastDestination) {
+            this.calculateAndDisplayRoute(this.center, this.lastDestination);
+          }
         },
         (error) => {
           console.error('Error al obtener la geolocalización', error);
@@ -254,6 +222,7 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
+
   addMarker() {
     if (this.center && this.map) {
       this.marker = new google.maps.Marker({
@@ -261,30 +230,11 @@ export class MapComponent implements AfterViewInit {
         map: this.map,
         title: 'Mi ubicación',
         icon: {
-          url: 'assets/images/mark.png',  // Ruta al icono personalizado
-          scaledSize: new google.maps.Size(50, 50),  // Tamaño del icono
+          url: 'assets/images/mark.png', 
+          scaledSize: new google.maps.Size(50, 50),
         },
       });
     }
-  }
-
-  // Función para calcular y mostrar la ruta
-  calculateAndDisplayRoute(start: google.maps.LatLngLiteral, end: google.maps.LatLngLiteral) {
-    const request: google.maps.DirectionsRequest = {
-      origin: start,  // Punto de inicio
-      destination: end,  // Punto de destino (Santiago, Chile en este caso)
-      travelMode: google.maps.TravelMode.DRIVING,  // Modo de transporte (puedes cambiar a WALKING o BICYCLING)
-    };
-
-    // Calcular la ruta usando el DirectionsService
-    this.directionsService.route(request, (response, status) => {
-      if (status === google.maps.DirectionsStatus.OK) {
-        // Si la respuesta es OK, renderiza la ruta
-        this.directionsRenderer.setDirections(response);
-      } else {
-        console.error('Error al obtener la ruta:', status);
-      }
-    });
   }
 
   // Función para actualizar el centro del mapa y el marcador

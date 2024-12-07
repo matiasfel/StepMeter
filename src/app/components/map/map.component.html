@@ -1,11 +1,45 @@
-<google-map
-  #map
-  [height]="'100%'"
-  [width]="'100%'"
-  [center]="center"
-  [zoom]="zoom"
-  [options]="options">
-</google-map>
+<div class="map-container">
+  <google-map
+    [center]="center"
+    [zoom]="zoom"
+    [options]="options"
+    height="100%"
+    width="100%"
+  ></google-map>
+  <button (click)="promptDestination()" class="calculate-route-button">
+    Calcular Ruta
+  </button>
+</div>
+<div class="info-box">
+  <p *ngIf="estimatedTime">
+    <strong>Tiempo estimado de viaje:</strong> {{ estimatedTime }}
+  </p>
+</div>
 
-<!-- Botón para centrar el mapa -->
-<!-- <button (click)="centerMap()" class="center-button"><img src="../../../assets/images/center.png" alt=""></button> -->
+  <!-- Estadísticas -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Estadísticas del Trayecto</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Distancia:</strong> {{ distance | number:'1.2-2' }} km</p>
+      <p><strong>Calorías Estimadas:</strong> {{ calories | number:'1.0-0' }} cal</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Marcador de Pasos -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Marcador de Pasos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Pasos: {{ steps }}</ion-label>
+        <ion-buttons slot="end">
+          <ion-button (click)="decreaseSteps()">-</ion-button>
+          <ion-button (click)="increaseSteps()">+</ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
