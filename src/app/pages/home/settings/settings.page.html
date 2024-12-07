@@ -1,28 +1,47 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Configuración</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard" routerLink="/dashboard" routerDirection="back" text="Volver"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+  <section class="info">
+    Aca podras configurar todos los aspectos de StepMeter, desde tu cuenta hasta la seguridad de tus datos.
+  </section>
+
   <ion-list>
-    <!-- Cambiar Modo Oscuro/Claro -->
-    <ion-item>
-      <ion-label>Modo Oscuro</ion-label>
-      <ion-toggle slot="end" (ionChange)="toggleDarkMode($event)"></ion-toggle>
+
+    <ion-item routerLink="/account">
+      <ion-label>Cuenta</ion-label>
     </ion-item>
 
-    <ion-item button (click)="actudata()">
-      <ion-label>Actualización de datos</ion-label>
+    <ion-item disabled routerLink="/notifications">
+      <ion-label>Notificaciones <span style="color: red;">(proximamente)</span></ion-label>
     </ion-item>
 
-    <!-- Cerrar Sesión -->
-    <ion-item button (click)="volver()">
-      <ion-label>volver</ion-label>
+    <ion-item disabled routerLink="/pref-use">
+      <ion-label>Preferencias de uso <span style="color: red;">(proximamente)</span></ion-label>
     </ion-item>
 
-    <ion-item button (click)="logout()">
-      <ion-label>Cerrar Sesión</ion-label>
+    <ion-item disabled routerLink="/perms">
+      <ion-label>Permisos <span style="color: red;">(proximamente)</span></ion-label>
     </ion-item>
+
+    <ion-item disabled routerLink="/security">
+      <ion-label>Seguridad <span style="color: red;">(proximamente)</span></ion-label>
+    </ion-item>
+    
+    <ion-item disabled routerLink="/data">
+      <ion-label>Datos <span style="color: red;">(proximamente)</span></ion-label>
+    </ion-item>
+
+    <ion-item disabled routerLink="/general-info">
+      <ion-label>Información general <span style="color: red;">(proximamente)</span></ion-label>
+    </ion-item>
+
   </ion-list>
 </ion-content>

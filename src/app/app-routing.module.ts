@@ -44,13 +44,41 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/profile/profile.module').then( m => m.ProfilePageModule),
     canActivate: [homeGuard]
   },
-  
   {
-    path: 'user-profile',
-    loadChildren: () => import('./pages/home/user-profile/user-profile.module').then( m => m.UserProfilePageModule)
-  }
-
-  
+    path: 'account',
+    loadChildren: () => import('./pages/home/settings/options/account/account.module').then( m => m.AccountPageModule),
+    canActivate: [homeGuard]
+  },
+  {
+    path: 'notifications',
+    loadChildren: () => import('./pages/home/settings/options/notifications/notifications.module').then( m => m.NotificationsPageModule),
+    canActivate: [homeGuard]
+  },
+  {
+    path: 'pref-use',
+    loadChildren: () => import('./pages/home/settings/options/pref-use/pref-use.module').then( m => m.PrefUsePageModule),
+    canActivate: [homeGuard]
+  },
+  {
+    path: 'perms',
+    loadChildren: () => import('./pages/home/settings/options/perms/perms.module').then( m => m.PermsPageModule),
+    canActivate: [homeGuard]
+  },
+  {
+    path: 'security',
+    loadChildren: () => import('./pages/home/settings/options/security/security.module').then( m => m.SecurityPageModule),
+    canActivate: [homeGuard]
+  },
+  {
+    path: 'data',
+    loadChildren: () => import('./pages/home/settings/options/data/data.module').then( m => m.DataPageModule),
+    canActivate: [homeGuard]
+  },
+  {
+    path: 'general-info',
+    loadChildren: () => import('./pages/home/settings/options/general-info/general-info.module').then( m => m.GeneralInfoPageModule),
+    canActivate: [homeGuard]
+  },
 ];
 
 @NgModule({

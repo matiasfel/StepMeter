@@ -17,9 +17,9 @@ import { GoogleMapsModule } from '@angular/google-maps';
     FormsModule,
     IonicModule,
     DashboardPageRoutingModule,
-    GoogleMapsModule
+    GoogleMapsModule,
   ],
   declarations: [DashboardPage, MapComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: []
 })
 export class DashboardPageModule {}

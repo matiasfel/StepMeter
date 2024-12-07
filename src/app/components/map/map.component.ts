@@ -287,26 +287,6 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  // Función para centrar el mapa
-  centerMap() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.updateMapCenter(position.coords.latitude, position.coords.longitude);
-          this.zoom = 14;
-          if (this.googleMap) {
-            this.googleMap.googleMap?.setZoom(this.zoom);
-          }
-        },
-        (error) => {
-          console.error('Error al obtener la geolocalización', error);
-        }
-      );
-    } else {
-      alert('La geolocalización no está disponible en este dispositivo.');
-    }
-  }
-
   // Función para actualizar el centro del mapa y el marcador
   updateMapCenter(lat: number, lng: number) {
     this.center = { lat, lng };

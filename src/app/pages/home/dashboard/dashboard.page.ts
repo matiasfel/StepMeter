@@ -11,23 +11,21 @@ import { Storage } from '@ionic/storage-angular';
 })
 export class DashboardPage implements OnInit {
 
-  displayName!: string;
-  email!: string;
 
   calories = 0;
   distance = 0;
-
   achivievements = 0;
-
   steps: any[] = [];
   routes: any[] = [];
 
+  displayName!: string;
+
   constructor(
+    private storage: Storage,
     private router: Router,
     private firebaseLoginService: FirebaseLoginService,
-    private storage: Storage,
-    private toastController: ToastController,
     private alertController: AlertController,
+    private toastController: ToastController,
     private menuController: MenuController
   ) { }
 
@@ -44,16 +42,14 @@ export class DashboardPage implements OnInit {
     const user = await this.storage.get('user');
     if (user) {
       this.displayName = user.displayName;
-      this.email = user.email;
     } else {
       this.displayName = "";
-      this.email = "";
     }
   }
 
   async logoutToast() {
     const toast = await this.toastController.create({
-      message: 'Su sesion ha sido cerrada exitosamente',
+      message: 'Su sesión ha sido cerrada exitosamente',
       duration: 2000
     });
     toast.present();
@@ -87,12 +83,18 @@ export class DashboardPage implements OnInit {
   async logout() {
     const shouldLogout = await this.logoutAlert('¿Está seguro que desea cerrar sesión?');
     if (shouldLogout) {
-      await this.firebaseLoginService.logout();
-      this.storage.remove('user');
-      this.storage.set('SessionID', false);
-      this.logoutToast();
-      this.menuController.close();
-      this.router.navigate(['/login']);
+      try {
+        await this.firebaseLoginService.logout();
+        await this.storage.remove('user');
+        await this.storage.set('SessionID', false);
+        await this.logoutToast();
+        await this.menuController.close();
+
+        this.router.navigate(['/login']);
+
+      } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+      }
     }
   }
 

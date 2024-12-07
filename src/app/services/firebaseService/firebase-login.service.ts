@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
-import { updateProfile } from 'firebase/auth';
+import { deleteApp } from 'firebase/app';
+import { updateProfile, EmailAuthProvider } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -55,5 +56,59 @@ export class FirebaseLoginService {
   async recovery(email: string) {
     return this.fireAuth.sendPasswordResetEmail(email);
   }
+
+  // Método para reautenticar al usuario
+  async reauthenticate(email: string, password: string) {
+    const user = await this.fireAuth.currentUser;
+    if (user) {
+      const credential = EmailAuthProvider.credential(email, password);
+      return user.reauthenticateWithCredential(credential);
+    }
+    return null;
+  }
+
+  // Método para cambiar el displayName
+  async updateDisplayName(newDisplayName: string) {
+    const user = await this.fireAuth.currentUser;
+    if (user) {
+      return user.updateProfile({ displayName: newDisplayName });
+    }
+  }
   
+  // Método para cambiar el correo electrónico
+  async updateEmail(newEmail: string) {
+    const user = await this.fireAuth.currentUser;
+    if (user) {
+      return user.updateEmail(newEmail);
+    }
+  }
+
+  async updatePassword(newPassword: string) {
+    const user = await this.fireAuth.currentUser;
+    if (user) {
+      return user.updatePassword(newPassword);
+    }
+  }
+
+  async deleteAccount() {
+    const user = await this.fireAuth.currentUser;
+    if (user) {
+      const uid = user.uid;
+
+      await this.firestore.doc(`users/${uid}`).delete();
+
+      await user.delete();
+    }
+  }
+
+  // Método para obtener el usuario actual
+  async getCurrentUser() {
+    return await this.fireAuth.currentUser;
+  }
+
+  async getCurrentEmail() {
+    const user = await this.fireAuth.currentUser;
+    return user ? user.email : null;
+  }
+
 }
