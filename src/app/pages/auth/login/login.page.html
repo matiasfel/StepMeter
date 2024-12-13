@@ -17,7 +17,8 @@
           autocomplete="email"
           autocorrect="off"
           inputmode="email"
-          required="true"
+          color="light"
+          required
           mode="ios"
 
           [(ngModel)]="email"
@@ -28,9 +29,9 @@
           class="custom"
           type="password"
           name="password"
-          autocomplete="current-password"
           autocorrect="off"
           inputmode="text"
+          color="light"
           required
           mode="ios"
 
@@ -58,7 +59,10 @@
         </div>
 
         <div class="register">
-          <p>¿No tienes cuenta? <br> <a routerLink="/registration">registrate.</a></p>
+          <p>
+            ¿No tienes cuenta? <br> 
+            <a routerLink="/registration" routerDirection="forward">registrate.</a>
+          </p>
         </div>
 
       </div>

@@ -18,7 +18,9 @@ export class DashboardPage implements OnInit {
   steps: any[] = [];
   routes: any[] = [];
 
+  photoURL!: string;
   displayName!: string;
+  email: string = '';
 
   constructor(
     private storage: Storage,
@@ -41,9 +43,13 @@ export class DashboardPage implements OnInit {
     await this.storage.create();
     const user = await this.storage.get('user');
     if (user) {
+      this.photoURL = user.photoURL;
       this.displayName = user.displayName;
+      this.email = user.email;
     } else {
-      this.displayName = "";
+      this.photoURL = "";
+      this.displayName = "profileUnkown";
+      this.email = "profileUnkown";
     }
   }
 

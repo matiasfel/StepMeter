@@ -5,14 +5,17 @@
     </ion-toolbar>
   </ion-header>
   <ion-content>
-    <section class="profileInfo">
-      <ion-avatar slot="start">
-        <img src="../../../../assets/images/profileUnknow.png" alt="Profile Picture">
+    
+    <section class="userInfo">
+      <ion-avatar>
+        <img [src]="photoURL || 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg' " alt="Avatar">
       </ion-avatar>
       <ion-label>
-        <p>Hola, {{ displayName }}</p>
+        <h1>{{ displayName }}</h1>
+        <p>{{ email }}</p>
       </ion-label>
     </section>
+
     <ion-list>
       <ion-menu-toggle auto-hide="true">
         <ion-item routerLink="/dashboard">
@@ -21,9 +24,9 @@
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle auto-hide="true">
-        <ion-item disabled routerLink="/profile">
+        <ion-item routerLink="/profile">
           <ion-icon slot="start" name="person"></ion-icon>
-          <ion-label>Perfil <span style="color: red;">(proximamente)</span></ion-label>
+          <ion-label>Perfil</ion-label>
         </ion-item>
       </ion-menu-toggle>
 
@@ -36,7 +39,7 @@
 
       <ion-menu-toggle auto-hide="true">
         <ion-item (click)="logout()">
-          <ion-icon slot="start" name="log-out-outline" class="logoutIcon"></ion-icon>
+          <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
           <ion-label color="danger">Cerrar sesión</ion-label>
         </ion-item>
       </ion-menu-toggle>

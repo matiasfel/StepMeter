@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
-import { deleteApp } from 'firebase/app';
 import { updateProfile, EmailAuthProvider } from 'firebase/auth';
+import { Geolocation } from '@capacitor/geolocation';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -83,6 +85,7 @@ export class FirebaseLoginService {
     }
   }
 
+  // Método para cambiar la contraseña
   async updatePassword(newPassword: string) {
     const user = await this.fireAuth.currentUser;
     if (user) {
@@ -90,6 +93,7 @@ export class FirebaseLoginService {
     }
   }
 
+  // Método para eliminar la cuenta
   async deleteAccount() {
     const user = await this.fireAuth.currentUser;
     if (user) {
@@ -106,9 +110,71 @@ export class FirebaseLoginService {
     return await this.fireAuth.currentUser;
   }
 
+  // Método para obtener el correo electrónico
   async getCurrentEmail() {
     const user = await this.fireAuth.currentUser;
     return user ? user.email : null;
+  }
+
+
+  async uploadProfilePhoto(file: File): Promise<string> {
+    const user = await this.fireAuth.currentUser;
+    if (user) {
+      const storageRef = firebase.storage().ref();
+      const photoRef = storageRef.child(`profilePhotos/${user.uid}/${file.name}`);
+      await photoRef.put(file);
+      const photoURL = await photoRef.getDownloadURL();
+      return photoURL;
+    }
+    throw new Error('No user is currently logged in');
+  }
+
+  async updatePhotoURL(photoURL: string): Promise<void> {
+    const user = await this.fireAuth.currentUser;
+    if (user) {
+      await user.updateProfile({ photoURL });
+      await this.firestore.doc(`users/${user.uid}`).update({ photoURL });
+    } else {
+      throw new Error('No user is currently logged in');
+    }
+  }
+
+  //////////////////////////////////////////
+
+  // Método para guardar la ubicación en Firestore
+  async saveLocationToFirestore(lat: number, lng: number) {
+    const user = await this.fireAuth.currentUser;
+    if (user) {
+      const uid = user.uid;
+      await this.firestore.doc(`users/${uid}`).update({
+        location: { lat, lng, timestamp: new Date() }
+      });
+    } else {
+      throw new Error('No user is currently logged in');
+    }
+  }
+
+  // Método para guardar la ubicación localmente
+  saveLocationLocally(lat: number, lng: number) {
+    localStorage.setItem('user_location', JSON.stringify({ lat, lng, timestamp: new Date() }));
+  }
+
+  // Método para obtener la ubicación del usuario
+  async getCurrentLocation() {
+    const position = await Geolocation.getCurrentPosition();
+    const { latitude, longitude } = position.coords;
+    return { lat: latitude, lng: longitude };
+  }
+
+  // Método para guardar ubicación tanto local como en Firestore
+  async updateUserLocation() {
+    try {
+      const location = await this.getCurrentLocation();
+      this.saveLocationLocally(location.lat, location.lng);
+      await this.saveLocationToFirestore(location.lat, location.lng);
+    } catch (error) {
+      console.error('Error updating user location:', error);
+    }
   }
 
 }

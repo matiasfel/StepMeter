@@ -79,13 +79,22 @@
   
   .form-space ion-input.custom {
     margin-bottom: 1rem;
-    text-indent: 0.5rem;
     border: 1px solid #696969;
     border-radius: 7px;
     height: 3rem;
+    --padding-start: 0.5rem;
+    --padding-end: 0.5rem;
+    --padding-top: 0.5rem;
+    --padding-bottom: 0.5rem;
+    --background: transparent;
     --color: #fff;
     --placeholder-color: #ddd;
     --placeholder-opacity: 0.5;
+  }
+  
+  .form-space ion-input.custom::part(native) {
+    font-size: 1rem;
+    line-height: normal;
   }
   
   .form-space ion-button {

@@ -12,7 +12,7 @@
 
     <section class="userInfo">
       <ion-avatar>
-        <img src="https://www.gravatar.com/avatar?d=identicon" alt="Avatar">
+        <img [src]="photoURL || 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg' " alt="Avatar">
       </ion-avatar>
       <ion-label>
         <h1>{{ displayName }}</h1>
@@ -22,26 +22,35 @@
 
     <ion-list>
 
+      <ion-item (click)="changePhotoURL()">
+        <ion-icon name="camera" slot="start"></ion-icon>
+        <ion-label>Cambiar foto de perfil</ion-label>
+      </ion-item>
+
       <ion-item (click)="changeDisplayName()">
+        <ion-icon name="person" slot="start"></ion-icon>
         <ion-label>Cambiar nombre de usuario</ion-label>
       </ion-item>
 
       <ion-item (click)="changeEmail()">
+        <ion-icon name="mail" slot="start"></ion-icon>
         <ion-label>Cambiar correo electronico</ion-label>
       </ion-item>
 
       <ion-item (click)="changePassword()">
+        <ion-icon name="lock-closed" slot="start"></ion-icon>
         <ion-label>Cambiar contraseña</ion-label>
       </ion-item>
 
       <ion-item (click)="deleteAccount()">
-        <ion-label><span style="color: red;">Eliminar cuenta</span></ion-label>
+        <ion-icon name="trash" slot="start" color="danger"></ion-icon>
+        <ion-label color="danger">Eliminar cuenta</ion-label>
       </ion-item>
 
       <ion-item (click)="logout()">
-        <ion-label><span style="color: red;">Cerrar sesión</span></ion-label>
+        <ion-icon name="log-out" slot="start" color="danger"></ion-icon>
+        <ion-label color="danger">Cerrar sesión</ion-label>
       </ion-item>
-      
 
     </ion-list>
 

@@ -30,7 +30,7 @@ ion-content {
     width: 100%;
     height: 100%;
     background-color: #0a0a0a;
-    margin-top: 20vh; /* Use viewport height units for better responsiveness */
+    margin-top: 20vh;
 }
 
   .form-space { /* Espacio del formulario */
@@ -75,13 +75,22 @@ ion-content {
 
   .form-space ion-input.custom {
     margin-bottom: 1rem;
-    text-indent: 0.5rem;
     border: 1px solid #696969;
     border-radius: 7px;
     height: 3rem;
+    --padding-start: 0.5rem;
+    --padding-end: 0.5rem;
+    --padding-top: 0.5rem;
+    --padding-bottom: 0.5rem;
+    --background: transparent;
     --color: #fff;
     --placeholder-color: #ddd;
     --placeholder-opacity: 0.5;
+  }
+  
+  .form-space ion-input.custom::part(native) {
+    font-size: 1rem;
+    line-height: normal;
   }
   
   ion-button {
@@ -109,7 +118,7 @@ ion-content {
     flex: 1;
     border: none;
     border-top: 1px solid #696969;
-    height: 1px; /* Adjust the height to make it thinner */
+    height: 1px;
   }
   
   .separator span {

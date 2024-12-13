@@ -1,0 +1,35 @@
+.profileInfo {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 0 0 1rem 1rem;
+    background-color: #c3c2ff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profileInfo ion-avatar {
+    margin-right: 10px;
+    width: 60px; /* Increased width */
+    height: 60px; /* Increased height */
+}
+
+.profileInfo ion-label {
+    margin-left: 15px;
+}
+
+.profileInfo ion-label h1 {
+    margin-bottom: 10px;
+}
+
+.profileInfo .metaInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+

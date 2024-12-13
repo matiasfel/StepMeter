@@ -3,6 +3,7 @@ import { AlertController, LoadingController, ToastController } from '@ionic/angu
 import { Router } from '@angular/router';
 import { FirebaseLoginService } from 'src/app/services/firebaseService/firebase-login.service';
 import { Storage } from '@ionic/storage-angular';
+import { Geolocation } from '@capacitor/geolocation';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class LoginPage implements OnInit {
     private alertController: AlertController,
     private loginFirebase: FirebaseLoginService,
     private storage : Storage,
-    private router: Router,
+    private router: Router
   ) { }
 
   // Método para mostrar un toast de éxito
@@ -59,25 +60,24 @@ export class LoginPage implements OnInit {
     return loading;
   }
 
-  // Método para manejar el acceso del formulario de inicio de sesión
   async formAccess() {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+  
     // Validación de campos vacíos
     if (!this.email || !this.password) {
       this.presentErrorAlert('Por favor completa todos los campos.');
       return;
     }
-
+  
     // Validación de formato de email
     if (!emailPattern.test(this.email)) {
       this.presentErrorAlert('Por favor ingresa un correo electrónico válido.');
       return;
     }
-
+  
     // Mostrar loading spinner
     const loading = await this.presentLoading();
-
+  
     // Intentar iniciar sesión después de un pequeño retraso
     setTimeout(async () => {
       this.loginFirebase.login(this.email, this.password).then(async (res) => {
@@ -85,28 +85,51 @@ export class LoginPage implements OnInit {
           this.presentErrorAlert('Error al obtener el usuario.');
           return;
         }
-        
-        // Mostrar toast de éxito y redirigir al dashboard
-        this.storage.set('user', {
-          email: this.email,
-          password: this.password,
-          displayName: res.user.displayName,
-          uid: res.user.uid
-        });
-        this.storage.set('SessionID', true)
-        this.presentSuccessToast();
-        this.router.navigate(['/dashboard']);
+  
+        try {
+          // Obtener ubicación actual
+          const position = await Geolocation.getCurrentPosition();
+          const { latitude, longitude } = position.coords;
+  
+          // Guardar ubicación localmente
+          const user = {
+            email: this.email,
+            password: this.password,
+            displayName: res.user.displayName,
+            uid: res.user.uid,
+            phoneNumber: res.user.phoneNumber,
+            photoURL: res.user.photoURL,
+            role: 'user',
+            selfLat: latitude,
+            selfLng: longitude,
+          };
+  
+          this.storage.set('user', user);
+          this.storage.set('SessionID', true);
+  
+          // Guardar ubicación en Firestore
+          await this.loginFirebase.saveLocationToFirestore(latitude, longitude);
+  
+          // Mostrar toast de éxito y redirigir al dashboard
+          this.presentSuccessToast();
+          this.router.navigate(['/dashboard']);
+        } catch (locationError) {
+          console.error('Error obteniendo ubicación:', locationError);
+          this.presentErrorAlert('No se pudo obtener tu ubicación. Por favor, verifica los permisos.');
+        }
       }).catch((err) => {
         this.presentErrorAlert('Correo o contraseña incorrectos.');
         console.log("Error", err);
       });
+  
       await loading.dismiss();
     }, 500);
   }
 
-    // Método que se ejecuta al inicializar el componente
-    async ngOnInit() {
-      await this.storage.create();
-      await this.storage.set('SessionID', false);
-    }
+  // Método que se ejecuta al inicializar el componente
+  async ngOnInit() {
+    await this.storage.create();
+    await this.storage.set('SessionID', false);
+  }
+
 }

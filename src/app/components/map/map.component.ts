@@ -1,6 +1,8 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 import { AlertController } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-map',
@@ -10,17 +12,20 @@ import { AlertController } from '@ionic/angular';
 export class MapComponent implements AfterViewInit {
   @ViewChild(GoogleMap) googleMap!: GoogleMap;
 
-  estimatedTime: string | null = null;
-  lastDestination: google.maps.LatLngLiteral | null = null;
-
-  // Coordenadas iniciales
+  // Variables para la ubicación y el mapa
   center: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
   zoom = 12;
+  marker: google.maps.Marker | null = null;
+  map: google.maps.Map | null = null;
 
   // Variables para estadísticas y pasos
   distance: number = 0; // En kilómetros
   calories: number = 0; // Calorías estimadas
   steps: number = 0; // Contador de pasos
+
+  // Variables para la ruta y el tiempo estimado
+  estimatedTime: string | null = null;
+  lastDestination: google.maps.LatLngLiteral | null = null;
 
   // Opciones personalizadas del mapa
   options: google.maps.MapOptions = {
@@ -54,16 +59,35 @@ export class MapComponent implements AfterViewInit {
     ]
   };
 
-  marker: google.maps.Marker | null = null;
-  map: google.maps.Map | null = null;
-
+  // Servicios de direcciones de Google Maps
   directionsService: google.maps.DirectionsService = new google.maps.DirectionsService();
   directionsRenderer: google.maps.DirectionsRenderer = new google.maps.DirectionsRenderer();
-
+  
   constructor(
-    private alertController: AlertController
+    private alertController: AlertController, 
+    private storage: Storage,
+    private firestore: AngularFirestore
   ) {}
 
+  async ngOnInit() {
+    await this.storage.create();
+  }
+  
+  // Inicializar el mapa después de la vista cargada
+  ngAfterViewInit() {
+    this.initMap();
+    this.getCurrentLocation();
+  }
+
+  // Inicializar el mapa
+  initMap() {
+    if (this.googleMap && this.googleMap.googleMap) {
+      this.map = this.googleMap.googleMap;
+      this.directionsRenderer.setMap(this.map);
+    }
+  }
+
+  // Mostrar alerta
   showAlert(header: string, message: string) {
     this.alertController
       .create({
@@ -72,14 +96,15 @@ export class MapComponent implements AfterViewInit {
         buttons: ['Aceptar'],
       })
       .then((alert) => alert.present());
-  }
-
-  async promptDestination() {
-    const alert = await this.alertController.create({
-      header: 'Calcular Ruta',
-      inputs: [
-        {
-          name: 'destination',
+    }
+    
+    // Solicitar destino al usuario
+    async promptDestination() {
+      const alert = await this.alertController.create({
+        header: 'Calcular Ruta',
+        inputs: [
+          {
+            name: 'destination',
           type: 'text',
           placeholder: 'Ubicación del destino',
         },
@@ -126,13 +151,14 @@ export class MapComponent implements AfterViewInit {
 
     await alert.present();
   }
-  
+
+  // Estimar calorías quemadas
   estimateCalories(distance: number): number {
     const caloriesPerKm = 50;
     return distance * caloriesPerKm;
   }
 
-    // Métodos para el marcador de pasos
+  // Métodos para el marcador de pasos
   increaseSteps() {
     this.steps += 1;
   }
@@ -143,20 +169,18 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  calculateAndDisplayRoute(
-    start: google.maps.LatLngLiteral,
-    end: google.maps.LatLngLiteral
-  ) {
+  // Calcular y mostrar la ruta en el mapa
+  calculateAndDisplayRoute(start: google.maps.LatLngLiteral, end: google.maps.LatLngLiteral) {
     const request: google.maps.DirectionsRequest = {
       origin: start,
       destination: end,
       travelMode: google.maps.TravelMode.WALKING,  // Puedes cambiar esto a TRANSPORT si usas vehículo.
     };
-  
+
     this.directionsService.route(request, (response, status) => {
       if (status === google.maps.DirectionsStatus.OK && response) {
         this.directionsRenderer.setDirections(response);
-  
+
         // Extraer distancia y tiempo estimado
         const route = response.routes[0];
         if (route && route.legs && route.legs[0]) {
@@ -176,18 +200,8 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    this.initMap();
-    this.getCurrentLocation();
-  }
 
-  initMap() {
-    if (this.googleMap && this.googleMap.googleMap) {
-      this.map = this.googleMap.googleMap;
-      this.directionsRenderer.setMap(this.map);
-    }
-  }
-
+  // Obtener la ubicación actual del usuario
   getCurrentLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -222,7 +236,7 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-
+  // Añadir marcador en el mapa
   addMarker() {
     if (this.center && this.map) {
       this.marker = new google.maps.Marker({
@@ -230,7 +244,7 @@ export class MapComponent implements AfterViewInit {
         map: this.map,
         title: 'Mi ubicación',
         icon: {
-          url: 'assets/images/mark.png', 
+          url: 'assets/images/mark.png',
           scaledSize: new google.maps.Size(50, 50),
         },
       });
