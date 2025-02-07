@@ -1,6 +1,6 @@
 # StepMeter
 
-Repositorio de nuestra primera aplicación móvil multiplataforma desarrollada con Ionic, la cual estara diseñada para funcionar en dispositivos móviles iOS y Android.
+StepMeter es una aplicación móvil multiplataforma enfocada en Android, desarrollada con el framework Ionic y Angular. Su objetivo es proporcionar una experiencia fluida y optimizada en dispositivos iOS y Android, aprovechando tecnologías web modernas para su desarrollo.
 
 ## Tecnologías Utilizadas
 
